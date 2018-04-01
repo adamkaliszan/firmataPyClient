@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import IoTShield
+import IoTShield as AS
 
 
 comPort = '/dev/ttyACM0'
 
-myBoard = IoTShield.IoTShield2(pwmMax=100)
+myBoard = AS.IoTShield(pwmMax=100)
 print("Connection estabilished !!!")
 
 ledNo=1
