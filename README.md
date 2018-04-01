@@ -35,10 +35,3 @@ In the project add the module *IoTShield.py*
 ## Authors
 
 * **Adam Kaliszan** - *Initial work* - [adamkaliszan](https://github.com/adamkaliszan)
-
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
