@@ -1,0 +1,85 @@
+<h3>Task 0: Intall pymata-express</h3>
+<pre>
+sudo python3.7 -m pip install pymata-express
+</pre>
+
+<h3>Task 1: prepare content of web page</h3>
+<p>
+Prepare webpage with interface for controlling the IoT module. Use <a href="http://anthonyterrien.com/demo/knob/">knob</a> for controlling the brightness.
+<ul>
+<li>Create new html file called <b>knobs.html</b></li>
+<li>Add Jquery library (<a href = "https://www.w3schools.com/jquery/jquery_get_started.asp">more info</a>)</li>
+<li>Add <a href="https://github.com/aterrien/jQuery-Knob"> jquerry.hnob.js library</a> in order to download file write:
+<pre>
+wget https://raw.githubusercontent.com/aterrien/jQuery-Knob/master/js/jquery.knob.js
+</pre>
+Next add the library in html header section:
+<pre>
+&lt;script src="jquery.knob"&gt;&lt;/script&gt;
+</pre>
+</li>
+<li>If You wish to make fancy html page add bootstrap or angular
+<pre>
+&lt;link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"&gt;
+</pre>
+</li>
+<li>Add a hook that is sending request to firmata, when the walue is changed. In script section, in main function <b>$(function ())</b> write:
+<pre>
+&lt;script&gt;
+    $(".dial").knob({
+        'change' : functionChange (v) 
+      {
+        console.log(this.$.attr('id') + " value = " + newValue);
+        /*send post request*/ 
+      }
+    });
+&lt;/script&gt;
+<pre>
+</li>
+</ul>
+</p>
+
+<h3>Task 2: prepare python async webserver</h3>
+<p>
+Create new python program with http server
+<ul>
+<li>Add static content (see previous instruction)
+</li>
+<li>Add route to static content <b>knobs.html</b>
+<pre>
+app.router.add_static('/html', path='./html/')
+</pre>
+</li>
+<li>Check if the static route is working</li>
+</ul>
+</p>
+
+<h3>Task 3: Add IoT module library</h3>
+<p>
+Add library
+<pre>
+import IoTShield as AS
+</pre>
+</p>
+Open serial connection and define max pwm value for controlling the LEDs
+<p>
+comPort = '/dev/ttyACM0'
+myBoard = AS.IoTShield(pwmMax=100)
+print("Connection estabilished !!!")
+</p>
+<p>
+Add async coroutine <b>async def ledCr</b>, that is changing the intensity of led[0]
+<pre>
+    while True:
+        for i in range(100):
+            myBoard.leds[0].write(i)
+            myBoard.leds[1].write(i)
+            await asyncio.sleep(1)
+</pre>
+</p>
+<p>
+Start the <b>ledCr</b> (see previous labs).
+
+</p>
+
+
