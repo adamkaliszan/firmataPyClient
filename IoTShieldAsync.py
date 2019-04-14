@@ -63,8 +63,8 @@ class AnalogSensor:
         self.__board=board
         self.__pinNo=pinNo        
 
-    async def ioInit(self):
-        await self.__board.set_pin_mode(self.__pinNo, Constants.ANALOG)
+#    async def ioInit(self):
+#        await self.__board.set_ (self.__pinNo, Constants.ANALOG)
 
     def read(self):
         return self.__board.analog_read(self.__pinNo)
@@ -80,8 +80,6 @@ class IoTShield:
             else:
                 board = PymataCore()
                                 
-                                
-            print("Firmware version {0}".format(board.get_firmware_version()))
         except Exception as excObj:
             print("Something is wrong: {0}".format(excObj))
             raise excObj
@@ -115,18 +113,21 @@ class IoTShield:
         self.sensorAxisZ       = AnalogSensor(board, 5)
         
     async def ioInit(self):
+        firmwareVersion = await self.__board.get_firmware_version()
+        print(f"IO init: firmware version {firmwareVersion}")
+
         for ledNo in self.leds:
             await self.leds[ledNo].ioInit()
 
         for keyNo in self.keys:
             await self.keys[keyNo].ioInit()
 
-        self.sensorLight.ioInit()
-        self.sensorTemperature.ioInit()
-        self.sensorAlcohol.ioInit()
-        self.sensorAxisX.ioInit()
-        self.sensorAxisY.ioInit()
-        self.sensorAxisZ.ioInit()
+#        await self.sensorLight.ioInit()
+#        await self.sensorTemperature.ioInit()
+#        await self.sensorAlcohol.ioInit()
+#        await self.sensorAxisX.ioInit()
+#        await self.sensorAxisY.ioInit()
+#        await self.sensorAxisZ.ioInit()
 
     async def sleep(self, time):
         await self.__board.sleep(time)
