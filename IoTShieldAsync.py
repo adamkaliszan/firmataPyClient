@@ -11,11 +11,14 @@ class Key:
     def __init__(self, board, pinNo):
         self.__board = board        
         self.__pinNo = pinNo
-        board.set_pin_mode(pinNo, Constants.INPUT)
-        board.digital_write(pinNo, 1)                
         
-    def read(self):
-        return True if self.__board.digital_read(self.__pinNo) == 0 else False
+    async def ioInit(self):
+        await self.__board.set_pin_mode(self.__pinNo, Constants.INPUT)
+        await self.__board.digital_write(self.__pinNo, 1)
+
+    async def read(self):
+        keyValue = await self.__board.digital_read(self.__pinNo)
+        return True if keyValue == 0 else False
 
 class Led:
     def __init__(self, board, pinNo, reverse=False, mode=Constants.OUTPUT, maxValue=100 ):      
@@ -59,7 +62,9 @@ class AnalogSensor:
     def __init__(self, board, pinNo):
         self.__board=board
         self.__pinNo=pinNo        
-        board.set_pin_mode(pinNo, Constants.ANALOG)
+
+    async def ioInit(self):
+        await self.__board.set_pin_mode(self.__pinNo, Constants.ANALOG)
 
     def read(self):
         return self.__board.analog_read(self.__pinNo)
@@ -102,18 +107,26 @@ class IoTShield:
             4: Key(board, 8)
         }
         #Sensors init
-        self.SensorLight       = AnalogSensor(board, 0)        
-        self.SensorTemperature = AnalogSensor(board, 1)
-        self.SensorAlcohol     = AnalogSensor(board, 2)
-        self.SensorAxisX       = AnalogSensor(board, 3)
-        self.SensorAxisY       = AnalogSensor(board, 4)
-        self.SensorAxisZ       = AnalogSensor(board, 5)
+        self.sensorLight       = AnalogSensor(board, 0)        
+        self.sensorTemperature = AnalogSensor(board, 1)
+        self.sensorAlcohol     = AnalogSensor(board, 2)
+        self.sensorAxisX       = AnalogSensor(board, 3)
+        self.sensorAxisY       = AnalogSensor(board, 4)
+        self.sensorAxisZ       = AnalogSensor(board, 5)
         
     async def ioInit(self):
-        await self.leds[1].ioInit()
-        await self.leds[2].ioInit()
-        await self.leds[3].ioInit()
-        await self.leds[4].ioInit()
+        for ledNo in self.leds:
+            await self.leds[ledNo].ioInit()
+
+        for keyNo in self.keys:
+            await self.keys[keyNo].ioInit()
+
+        self.sensorLight.ioInit()
+        self.sensorTemperature.ioInit()
+        self.sensorAlcohol.ioInit()
+        self.sensorAxisX.ioInit()
+        self.sensorAxisY.ioInit()
+        self.sensorAxisZ.ioInit()
 
     async def sleep(self, time):
         await self.__board.sleep(time)

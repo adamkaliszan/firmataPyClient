@@ -10,11 +10,6 @@ print("Connection estabilished !!!")
 
 ledNo=1
 while True:
-#    myBoard.leds[ledNo].toggle()    
-#    myBoard.sleep(1)
-
-#    myBoard.leds[ledNo].toggle()
-    myBoard.ioInit()
     myBoard.sleep(1)
         
     ledNo = 1 if ledNo == 5 else ledNo+1
