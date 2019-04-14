@@ -1,0 +1,68 @@
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="jquery.knob.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <script>
+$(function () 
+{
+  $(".dial").knob(
+  {
+    'change': function(newValue) 
+    {
+      console.log(this.$.attr('id') + " value = " + newValue);
+      ledNo = this.$.attr('ledNo')
+
+      messageData = { "value": newValue };
+
+      ajaxData = {
+        "url" : "http://localhost:8080/led/" + ledNo
+      , "type": "PUT"
+      , "data": JSON.stringify(messageData)
+      , "headers": 
+        {
+          'Content-Type': 'application/json'
+        , 'Accept'      : 'application/json'
+        }
+      , 'success': function (response) 
+        { 
+          console.log("Success");
+        }
+      , 'error': function (response) 
+        { 
+          console.log("Error");
+        }
+
+      }
+
+      $.ajax(ajaxData);
+    }
+  });
+});
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <p>
+          Led 1
+        </p>
+        <input id="led1val" ledNo="1" type="text" value="25" class="dial">
+      </div>
+      <div class="col">
+        <p>
+          Led 2
+        </p>
+        <input id="led2val" ledNo="2" type="text" value="50" class="dial">
+      </div>
+      <div class="col">
+        <p>
+          Led 3
+        </p>
+        <input id="led3val" ledNo="3" type="text" value="75" class="dial">
+      </div>
+    </div>
+  </div>  
+</body>
